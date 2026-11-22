@@ -83,31 +83,3 @@ export function parseUPIString(rawString) {
     raw: trimmed
   };
 }
-
-// Preset demo QR targets for quick simulation during college presentations
-export const SAMPLE_UPI_TARGETS = [
-  {
-    name: 'College Campus Cafeteria',
-    vpa: 'cafeteria.campus@apexbank',
-    category: 'Food & Dining',
-    suggestedAmount: 85
-  },
-  {
-    name: 'Central University Bookstore',
-    vpa: 'bookstore.central@icici',
-    category: 'Education & Books',
-    suggestedAmount: 420
-  },
-  {
-    name: 'Green Leaf Groceries',
-    vpa: 'greenleaf.stores@okaxis',
-    category: 'Supermarket',
-    suggestedAmount: 250
-  },
-  {
-    name: 'Rahul Sharma (Personal)',
-    vpa: 'rahul.s99@okhdfcbank',
-    category: 'Friend / P2P',
-    suggestedAmount: 500
-  }
-];
