@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#021438" />
+      <stop offset="45%" stop-color="#002d7a" />
+      <stop offset="100%" stop-color="#005cd6" />
+    </linearGradient>
+
+    <!-- Wing Left Gradient (Fintech Cyan) -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#40e0d0" />
+      <stop offset="50%" stop-color="#00baf2" />
+      <stop offset="100%" stop-color="#0077ff" />
+    </linearGradient>
+
+    <!-- Wing Right Gradient (Vibrant Blue & Violet) -->
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="30%" stop-color="#cdefff" />
+      <stop offset="100%" stop-color="#00baf2" />
+    </linearGradient>
+
+    <!-- Center Lightning / Bolt Accent -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#70e4ff" />
+    </linearGradient>
+
+    <!-- Drop Shadow for 3D Floating Effect -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.45" />
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#00d2ff" flood-opacity="0.35" />
+    </filter>
+
+    <filter id="innerLight" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#ffffff" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- App Icon Squircle Container (Android / iOS standard continuous curve) -->
+  <rect width="512" height="512" rx="120" fill="url(#bgGrad)" />
+
+  <!-- Subtle Inner Border Highlight -->
+  <rect x="6" y="6" width="500" height="500" rx="114" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="4" />
+
+  <!-- Background Ambient Glow Behind Symbol -->
+  <circle cx="256" cy="256" r="140" fill="#00baf2" opacity="0.22" filter="blur(40px)" />
+
+  <!-- The Apex Emblem: Modern Geometric Diamond / Interlocking Chevron "A" -->
+  <g filter="url(#glow)">
+    <!-- Left Wing of "A" (Forward Thrust) -->
+    <path 
+      d="M256 96 L136 336 L196 336 L256 216 L316 336 L376 336 Z" 
+      fill="url(#cyanGrad)" 
+      opacity="0.95"
+    />
+
+    <!-- Intersecting Speed Diamond (The "P" & Forward Transaction Flow) -->
+    <path 
+      d="M256 160 L356 260 L256 360 L156 260 Z" 
+      fill="url(#blueGrad)" 
+      opacity="0.85"
+    />
+
+    <!-- High-Precision Center Vault Prism -->
+    <path 
+      d="M256 195 L320 260 L256 325 L192 260 Z" 
+      fill="#011b4d" 
+      opacity="0.95"
+    />
+
+    <!-- Center Lightning / Upward Apex Needle -->
+    <polygon 
+      points="256,120 278,245 256,230 234,245" 
+      fill="url(#goldGrad)" 
+      filter="url(#innerLight)"
+    />
+
+    <!-- Horizontal Speed Bridges -->
+    <rect x="210" y="380" width="92" height="18" rx="9" fill="url(#cyanGrad)" />
+    <rect x="236" y="412" width="40" height="12" rx="6" fill="#00baf2" opacity="0.7" />
+  </g>
+</svg>

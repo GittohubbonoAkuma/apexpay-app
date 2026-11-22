@@ -1,0 +1,13 @@
+{
+  "appId": "com.apexpay.fintech",
+  "appName": "ApexPay",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#002970",
+    "allowMixedContent": true
+  }
+}
