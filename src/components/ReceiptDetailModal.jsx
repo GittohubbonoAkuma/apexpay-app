@@ -59,6 +59,13 @@ export default function ReceiptDetailModal({ txn, onClose }) {
             <span className="font-mono font-semibold text-slate-800">{txn.id}</span>
           </div>
 
+          {txn.type === 'DEBIT' && (txn.payeeVpa || txn.subtitle?.replace(/^Paid to /, '')) && (
+            <div className="flex justify-between items-center gap-4">
+              <span className="text-slate-500">Merchant UPI ID</span>
+              <span className="font-mono font-semibold text-slate-800">{txn.payeeVpa || txn.subtitle.replace(/^Paid to /, '')}</span>
+            </div>
+          )}
+
           <div className="flex justify-between items-center">
             <span className="text-slate-500">UPI Ref / UTR</span>
             <span className="font-mono font-semibold text-slate-800">{txn.refNo}</span>

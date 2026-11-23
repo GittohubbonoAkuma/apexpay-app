@@ -16,7 +16,6 @@ A modern, high-polish FinTech UI and UPI QR payment simulator built for software
    * **Real Camera Scanning:** Uses `html5-qrcode` to access laptop or phone camera and scan real UPI QR codes.
    * **Standard UPI Intent Parsing:** Automatically extracts payee name (`pn`), UPI address (`pa`), amount (`am`), and transaction notes (`tn`).
    * **QR Image Upload:** Allows selecting a saved QR code image from the file picker.
-   * **Presentation Presets:** Built-in one-click demo targets (e.g., Campus Cafeteria, Bookstore) so you can demonstrate the entire flow even if no external QR is handy.
    * **Manual UPI / Phone Entry:** Direct P2P transfer by entering a UPI ID or 10-digit mobile number.
 
 3. **Payment & Celebration Flow:**
@@ -69,7 +68,7 @@ apexpay-app/
     ├── App.jsx
     ├── index.css
     ├── utils/
-    │   ├── upiParser.js       # UPI intent URI parser & sample presets
+    │   ├── upiParser.js       # UPI intent URI parser
     │   ├── audioChime.js      # Web Audio API chime synthesizer
     │   └── storage.js         # LocalStorage ledger & balance state
     └── components/
@@ -78,7 +77,7 @@ apexpay-app/
         ├── QuickActions.jsx   # 4 circular UPI transfer actions
         ├── ServicesGrid.jsx   # BBPS bill payments grid
         ├── RecentTransactions.jsx # Passbook preview
-        ├── QRScannerModal.jsx # Camera QR scanner & presets
+        ├── QRScannerModal.jsx # Camera QR scanner
         ├── PaymentModal.jsx   # Amount & payment source entry
         ├── PaymentProcessingModal.jsx # Simulated NPCI switch loader
         ├── PaymentSuccessModal.jsx    # Green checkmark & confetti

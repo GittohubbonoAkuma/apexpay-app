@@ -27,6 +27,7 @@ export default function App() {
 
   // Modals state
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [scannerInitialMode, setScannerInitialMode] = useState('camera');
   const [paymentTarget, setPaymentTarget] = useState(null);
   const [processingData, setProcessingData] = useState(null);
   const [successTxn, setSuccessTxn] = useState(null);
@@ -49,20 +50,11 @@ export default function App() {
     setPaymentTarget(target);
   };
 
-  // 2. Open manual pay modal with preset mode
+  // 2. Open manual UPI or mobile entry
   const handleOpenManualPay = (type) => {
-    if (type === 'mobile') {
-      setPaymentTarget({
-        isValid: true,
-        vpa: '9876543210@apexpay',
-        name: 'Friend / Contact (+91 9876543210)',
-        amount: null,
-        currency: 'INR',
-        note: 'P2P Mobile Transfer',
-        merchantCode: ''
-      });
-    } else if (type === 'upi') {
-      setIsScannerOpen(true); // Opens scanner with manual UPI tab option
+    if (type === 'mobile' || type === 'upi') {
+      setScannerInitialMode('manual');
+      setIsScannerOpen(true);
     } else if (type === 'self') {
       showToast('Self transfer between linked banks simulated');
     }
@@ -91,7 +83,10 @@ export default function App() {
       refNo: randomUpiRef,
       type: 'DEBIT',
       amount: amount,
-      title: target.name || 'Merchant Payment',
+      title: target.name || target.vpa || 'UPI Payment',
+      payeeName: target.name || target.vpa || 'UPI Payment',
+      payeeVpa: target.vpa || '',
+      note,
       subtitle: `Paid to ${target.vpa}`,
       date: new Date().toISOString(),
       status: 'SUCCESS',
@@ -318,6 +313,7 @@ export default function App() {
         <QRScannerModal
           isOpen={isScannerOpen}
           onClose={() => setIsScannerOpen(false)}
+          initialMode={scannerInitialMode}
           onTargetDetected={handleTargetDetected}
         />
 

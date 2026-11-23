@@ -19,10 +19,10 @@ export function parseUPIString(rawString) {
       const params = new URLSearchParams(queryString);
 
       const pa = params.get('pa') || ''; // Payee Address (VPA)
-      const pn = params.get('pn') ? decodeURIComponent(params.get('pn')) : ''; // Payee Name
+      const pn = params.get('pn') ? params.get('pn') : ''; // Payee Name
       const am = params.get('am') || ''; // Amount (optional)
       const cu = params.get('cu') || 'INR'; // Currency
-      const tn = params.get('tn') ? decodeURIComponent(params.get('tn')) : ''; // Transaction Note
+      const tn = params.get('tn') ? params.get('tn') : ''; // Transaction Note
       const mc = params.get('mc') || ''; // Merchant Code
 
       // Format display name

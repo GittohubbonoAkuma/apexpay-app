@@ -107,6 +107,11 @@ export default function PassbookModal({ isOpen, onClose, balance, transactions, 
                       <p className="text-[10px] text-slate-600">
                         {dateStr}
                       </p>
+                      {txn.type === 'DEBIT' && (txn.payeeVpa || txn.subtitle?.replace(/^Paid to /, '')) && (
+                        <p className="text-[10px] font-mono text-slate-500">
+                          {txn.payeeVpa || txn.subtitle.replace(/^Paid to /, '')}
+                        </p>
+                      )}
                       <p className="text-[10px] font-mono text-slate-600">
                         {txn.refNo}
                       </p>

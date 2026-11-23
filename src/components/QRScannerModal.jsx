@@ -3,14 +3,18 @@ import { Html5Qrcode } from 'html5-qrcode';
 import { X, Camera, Image as ImageIcon, AlertCircle, ArrowRight, RefreshCw } from 'lucide-react';
 import { parseUPIString } from '../utils/upiParser';
 
-export default function QRScannerModal({ isOpen, onClose, onTargetDetected }) {
+export default function QRScannerModal({ isOpen, onClose, onTargetDetected, initialMode = 'camera' }) {
   const [activeTab, setActiveTab] = useState('camera');
   const [manualInput, setManualInput] = useState('');
   const [cameraError, setCameraError] = useState(null);
-  const [isScanning, setIsScanning] = useState(false);
   const scannerRef = useRef(null);
   const fileInputRef = useRef(null);
   const mountedRef = useRef(true);
+  const onTargetDetectedRef = useRef(onTargetDetected);
+
+  useEffect(() => {
+    onTargetDetectedRef.current = onTargetDetected;
+  }, [onTargetDetected]);
 
   const stopScanner = useCallback(async () => {
     if (scannerRef.current) {
@@ -30,18 +34,24 @@ export default function QRScannerModal({ isOpen, onClose, onTargetDetected }) {
       }
       scannerRef.current = null;
     }
-    setIsScanning(false);
   }, []);
 
   const handleDecodedText = useCallback(async (decodedText) => {
     await stopScanner();
     const parsed = parseUPIString(decodedText);
     if (parsed && parsed.isValid) {
-      onTargetDetected(parsed);
+      onTargetDetectedRef.current(parsed);
     } else {
       alert('Unrecognized QR format. Please scan a valid UPI QR code.');
     }
-  }, [stopScanner, onTargetDetected]);
+  }, [stopScanner]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setActiveTab(initialMode);
+      setCameraError(null);
+    }
+  }, [isOpen, initialMode]);
 
   // Start camera when modal opens
   useEffect(() => {
@@ -67,31 +77,12 @@ export default function QRScannerModal({ isOpen, onClose, onTargetDetected }) {
 
       try {
         setCameraError(null);
-        setIsScanning(true);
-
         const html5QrCode = new Html5Qrcode(scannerElementId, {
           verbose: false
         });
         scannerRef.current = html5QrCode;
 
-        // Try to get available cameras first
-        let cameraId = { facingMode: "environment" };
-        try {
-          const cameras = await Html5Qrcode.getCameras();
-          if (cameras && cameras.length > 0) {
-            // Prefer back camera
-            const backCam = cameras.find(c =>
-              c.label.toLowerCase().includes('back') ||
-              c.label.toLowerCase().includes('rear') ||
-              c.label.toLowerCase().includes('environment')
-            );
-            cameraId = backCam ? backCam.id : cameras[cameras.length - 1].id;
-          }
-        } catch (camErr) {
-          // Fall back to facingMode constraint
-          cameraId = { facingMode: "environment" };
-        }
-
+        // Request the rear camera directly; device enumeration can be empty before permission is granted.
         const config = {
           fps: 10,
           qrbox: (viewfinderWidth, viewfinderHeight) => {
@@ -103,32 +94,49 @@ export default function QRScannerModal({ isOpen, onClose, onTargetDetected }) {
           disableFlip: false
         };
 
-        await html5QrCode.start(
-          cameraId,
-          config,
-          (decodedText) => {
-            if (!mountedRef.current) return;
-            handleDecodedText(decodedText);
-          },
-          () => {
-            // Scan frame — ignore
-          }
-        );
+        const onScanSuccess = (decodedText) => {
+          if (!mountedRef.current) return;
+          handleDecodedText(decodedText);
+        };
+        const onScanFailure = () => {};
+
+        try {
+          await html5QrCode.start(
+            { facingMode: 'environment' },
+            config,
+            onScanSuccess,
+            onScanFailure
+          );
+        } catch (rearCameraError) {
+          // Desktops and some tablets have only a user-facing camera. Fall back
+          // to an available device if the environment-facing constraint fails.
+          const cameras = await Html5Qrcode.getCameras();
+          if (!cameras.length) throw rearCameraError;
+          const backCamera = cameras.find(({ label }) => /back|rear|environment/i.test(label));
+          await html5QrCode.start(
+            (backCamera || cameras[0]).id,
+            config,
+            onScanSuccess,
+            onScanFailure
+          );
+        }
       } catch (err) {
         if (!mountedRef.current) return;
         console.warn('Camera error:', err);
 
         let errorMsg = 'Unable to start camera.';
-        if (err?.message?.includes('Permission') || err?.name === 'NotAllowedError') {
+        const errorText = `${err?.name || ''} ${err?.message || ''}`.toLowerCase();
+        if (errorText.includes('permission') || errorText.includes('notallowed') || errorText.includes('denied')) {
           errorMsg = 'Camera permission denied. Please allow camera access in your browser settings and try again.';
-        } else if (err?.message?.includes('NotFound') || err?.name === 'NotFoundError') {
+        } else if (errorText.includes('notfound') || errorText.includes('no camera')) {
           errorMsg = 'No camera found on this device. Use the manual entry tab or upload a QR image.';
-        } else if (err?.message?.includes('NotReadable') || err?.name === 'NotReadableError') {
+        } else if (errorText.includes('notreadable') || errorText.includes('trackstart')) {
           errorMsg = 'Camera is in use by another app. Close other apps using the camera and try again.';
+        } else if (!window.isSecureContext) {
+          errorMsg = 'Camera access requires HTTPS or localhost. Open this app over a secure connection.';
         }
 
         setCameraError(errorMsg);
-        setIsScanning(false);
       }
     };
 

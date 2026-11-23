@@ -89,7 +89,7 @@ export default function PaymentSuccessModal({ txn, onClose, onViewPassbook }) {
 
             <div className="flex justify-between items-center">
               <span className="text-slate-500 font-medium">Payee UPI ID</span>
-              <span className="font-mono text-slate-700">{txn.subtitle?.replace('Paid to ', '')}</span>
+              <span className="font-mono text-slate-700">{txn.payeeVpa || txn.subtitle?.replace('Paid to ', '')}</span>
             </div>
 
             <div className="flex justify-between items-center">
